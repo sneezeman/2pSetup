@@ -4,6 +4,12 @@ import pandas as pd
 import numpy as np
 # Read csv and get index of lines with nan... and without nan
 filenameData = easygui.fileopenbox()
+if 'Pulse' in filenameData.split('/')[-1]:
+    filenamePulse = filenameData
+    filenameData = filenamePulse.strip(filenamePulse.split('/')[-1]) + filenamePulse.split('/')[-1].replace('Pulse', 'Data')
+else:
+    filenamePulse = filenameData.strip(filenameData.split('/')[-1]) + filenameData.split('/')[-1].replace('Data', 'Pulse')
+
 df = pd.read_csv(filenameData, sep=';', header=None)
 idx = df.index[df[df.columns[1]].isnull()]
 idx2 = df.index[df[df.columns[1]].notnull()]
@@ -21,7 +27,6 @@ df[0] = pd.to_datetime(df[0])
 df['Pulse'] = 0
 
 # Read second csv. Replace Data with Pulse
-filenamePulse = filenameData.strip(filenameData.split('/')[-1]) + filenameData.split('/')[-1].replace('Data', 'Pulse')
 df2 = pd.read_csv(filenamePulse, sep= ';', header = None)
 df2[0] = df2[0].apply(lambda x: float(x.split(':')[0])*3600+float(x.split(':')[1])*60+float(x.split(':')[2]))
 # This cycle works with number of lines in pulse file
@@ -43,4 +48,12 @@ for i in range(df2[0].size):
         temp_df = pd.merge_asof(df,dfToAdd,on=0,tolerance=pd.Timedelta('1ms'))
         df['Pulse'] = df['Pulse'] + temp_df[temp_df.columns[-1]].fillna(0)
 outputFilename = filenameData.strip(filenameData.split('/')[-1]) + filenameData.split('/')[-1].replace('Data', 'Merged')
-df.to_csv(outputFilename)
+df.to_csv(outputFilename, header=False, index=False)
+
+# Part of real shame
+if  isinstance(df.iloc[0,-2], basestring):
+    with open(outputFilename, 'r') as file :
+        filedata = file.read()
+    filedata = filedata.replace('"', '')
+    with open(outputFilename, 'w') as file:
+        file.write(filedata)
