@@ -1,6 +1,4 @@
-
 # Change the format of Pulse_ file downstairs
-# Add the UI box for retriebvng csv files
 import easygui
 import pandas as pd
 import numpy as np
@@ -44,5 +42,5 @@ for i in range(df2[0].size):
         # Another df, but in fact I'll use only last column
         temp_df = pd.merge_asof(df,dfToAdd,on=0,tolerance=pd.Timedelta('1ms'))
         df['Pulse'] = df['Pulse'] + temp_df[temp_df.columns[-1]].fillna(0)
-
-df.to_csv('output.csv')
+outputFilename = filenameData.strip(filenameData.split('/')[-1]) + filenameData.split('/')[-1].replace('Data', 'Merged')
+df.to_csv(outputFilname)
