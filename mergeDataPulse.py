@@ -43,4 +43,4 @@ for i in range(df2[0].size):
         temp_df = pd.merge_asof(df,dfToAdd,on=0,tolerance=pd.Timedelta('1ms'))
         df['Pulse'] = df['Pulse'] + temp_df[temp_df.columns[-1]].fillna(0)
 outputFilename = filenameData.strip(filenameData.split('/')[-1]) + filenameData.split('/')[-1].replace('Data', 'Merged')
-df.to_csv(outputFilname)
+df.to_csv(outputFilename)
