@@ -1,12 +1,12 @@
-# Write comments
+
 # Change the format of Pulse_ file downstairs
 # Add the UI box for retriebvng csv files
-from Tkinter import Tk
-from tkinter.filedialog import askopenfilename
+import easygui
 import pandas as pd
 import numpy as np
 # Read csv and get index of lines with nan... and without nan
-df = pd.read_csv('Data_10-19-2018_15-12-59.csv', sep=';', header=None)
+filenameData = easygui.fileopenbox()
+df = pd.read_csv(filenameData, sep=';', header=None)
 idx = df.index[df[df.columns[1]].isnull()]
 idx2 = df.index[df[df.columns[1]].notnull()]
 # Shift values at idx lines to the second column
@@ -22,8 +22,9 @@ df[0] = pd.to_datetime(df[0])
 # Create one more column fot the pulse data
 df['Pulse'] = 0
 
-# Read second csv
-df2 = pd.read_csv('Pulse_10-19-2018_15-12-59.csv', sep= ';', header = None)
+# Read second csv. Replace Data with Pulse
+filenamePulse = filenameData.strip(filenameData.split('/')[-1]) + filenameData.split('/')[-1].replace('Data', 'Pulse')
+df2 = pd.read_csv(filenamePulse, sep= ';', header = None)
 df2[0] = df2[0].apply(lambda x: float(x.split(':')[0])*3600+float(x.split(':')[1])*60+float(x.split(':')[2]))
 # This cycle works with number of lines in pulse file
 for i in range(df2[0].size):
