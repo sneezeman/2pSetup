@@ -30,7 +30,7 @@ classdef AIProcess
             
             import dabs.ni.daqmx.*      
             obj.taskName = taskName;
-            obj.outputFilenameBackPart = sprintf('_%s.csv', datestr(now,'mm-dd-yyyy HH-MM-SS'));
+            obj.outputFilenameBackPart = sprintf('_%s.csv', datestr(now,'mm-dd-yyyy_HH-MM-SS'));
             obj.outputFilename = strcat('Data', obj.outputFilenameBackPart);
 
             try

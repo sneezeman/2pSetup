@@ -281,6 +281,11 @@ obj.figA=figure('Units','pixels','Position',[1370 50 400 400],...
             end
             
         else 
+            % Run python script
+            if get(obj.but(18),'Value')
+                system(['python mergeDataPulse.py Data', filename(AIReading)])
+            end
+            
             % Restart AIProcess obj
             if AIState == 1
                 delete (AIReading);
